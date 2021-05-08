@@ -4,9 +4,10 @@
 #include <cmath>
 #include <stdlib.h>
 #include <time.h>
+#include <stdlib.h>
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 using namespace std;
-void pasos(char*,char**,int,int,int,int);
+void pasos(char*,char**,int,int,int,int,int ,int,int);
 char** create(int,int);
 void free(char**&,int);
 char** game(int,int,int);
@@ -32,6 +33,7 @@ int main(int argc, char** argv) {
 	while(main!=4){
 		switch(main=menu()){
 			case 1:{
+			
 				int size;
 				char*array;
 				cout<<"ingrese el size: "<<endl;
@@ -65,7 +67,10 @@ int main(int argc, char** argv) {
 			}
 			case 3:{
 				int size;
-				cout<<"ingrese tamano de pasos: "<<endl;
+				int steps;
+				cout<<"ingrese cantidad de pasos: "<<endl;
+				cin>>steps;
+				cout<<"ingrese tamano de array: "<<endl;
 				cin>>size;
 				char* pasos1=new char[size];
 				for(int i=0;i<size;i++){
@@ -80,13 +85,19 @@ int main(int argc, char** argv) {
 				cout<<"ingrese cantidad obstaculos: "<<endl;
 				cin>>k;
 				char** matriz=game(n,m,k);
-				int fila,columna;
+				int filas,columnas;
 				cout<<"ingrese fila donde va a empezar: "<<endl;
-				cin>>fila;
+				cin>>filas;
 				cout<<"ingrese columna donde va a empezar: "<<endl;
-				cin>>columna;
+				cin>>columnas;
+				char* array=uno(pasos1,size)	;
+				print(array,size);
+				cout<<size<<endl;
+				pasos(array,matriz,n,m,k,size,filas,columnas,steps);
+				delete[]array;
+				delete[]pasos1;
+				free(matriz,n);
 				
-				pasos(pasos1,matriz,n,m,k,size);
 				break;
 			}
 			case 4:{
@@ -98,7 +109,110 @@ int main(int argc, char** argv) {
 	}//while
 	return 0;
 }
-void pasos(char*array,char**matriz,int n,int m,int k,int size){
+void pasos(char*array,char**matriz,int n,int m,int k,int size,int filas,int columnas,int steps){
+	//cout<<size<<endl;
+	//cout<<steps;
+	print2(matriz,n,m);
+	int cont=0;
+	char move;
+	while(steps>0){
+		for(int i=0;i<size;i++){
+			for(int i2=0;i2<n;i2++){
+				for(int j=0;j<m;j++){
+					while(matriz[i2][j]!='#'){
+						if(array[i]=='U'){
+							if(steps==0){
+								break;
+							}
+							move=186;
+						
+							matriz[filas][columnas]=move;
+							filas-=1;
+							columnas=columnas;
+							cont++;
+							
+							cout<<"enter y mire el proximo "<<endl<<flush;
+							system ("PAUSE");
+							print2(matriz,n,m);
+							steps--;
+							cout<<"paso: "<<steps<<endl;
+							if(matriz[n-n][columnas]==move){
+								//cout<<filas<<" "<<columnas<<endl;
+								columnas+=1;
+								filas=0;
+								steps--;
+							}
+							steps--;
+						}
+						
+						
+						if(array[i]=='R'){
+							if(steps==0){
+								break;
+							}
+							move=205;
+							matriz[filas][columnas]=move;
+							filas=filas;
+							columnas+=1;
+							
+							cout<<"enter y mire el proximo "<<endl<<flush;
+							system ("PAUSE");
+							steps--;
+							cout<<"paso: "<<steps<<endl;
+							print2(matriz,n,m);
+							if(matriz[filas-1][columnas-1]==move){
+								columnas=columnas;
+								filas
+								=n-1;
+								steps--;
+							}
+						}
+						
+						if(array[i]=='D'){
+							if(steps==0){
+								break;
+							}
+							move=186;
+							matriz[filas][columnas]=move;
+							
+							filas+=1;
+							columnas=columnas;
+							cout<<"enter y mire el proximo "<<endl<<flush;
+							system ("PAUSE");
+							steps--;
+							cout<<"paso: "<<steps<<endl;
+							print2(matriz,n,m);
+							if(matriz[n-1][columnas]==move){
+								filas=filas;
+								columnas+=1;
+								steps--;
+							}
+						}
+					
+						if(array[i]=='L'){
+							if(steps==0){
+								break;
+							}
+							move=205;
+							matriz[filas][columnas]=move;
+							filas=filas;
+							columnas-=1;
+							cout<<"enter y mire el proximo "<<endl<<flush;
+							system ("PAUSE");
+							steps--;
+							cout<<"paso: "<<steps<<endl;
+							print2(matriz,n,m);
+						}
+						
+					}
+				}
+			}
+			
+		}
+		steps--;
+	}
+		
+		
 	
 }
 void free(char**& matriz,int size){
